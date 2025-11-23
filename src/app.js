@@ -60,10 +60,25 @@ app.delete("/user", async (req, res) => {
   }
 });
 
-app.patch("/user", async (req, res) => {
+app.patch("/user/:userId", async (req, res) => {
   const data = req.body;
-  const userId = req.body._id;
+  const userId = req.params.userId;
+
   try {
+    ALLOWED_UPDATES = ["photoUrl", "about", "gender", "age", "skills"];
+
+    const isUpdateAllowed = Object.keys(data).every((k) => {
+      ALLOWED_UPDATES.includes(k);
+    });
+
+    if (!isUpdateAllowed) {
+      throw new Error("Updates Not Allowed!  ");
+    }
+
+    if (data?.skills.length > 10) {
+      throw new Error("skills cannot be more than 10 ");
+    }
+
     await User.findByIdAndUpdate({ _id: userId }, data, {
       runValidators: true,
     });
@@ -72,6 +87,7 @@ app.patch("/user", async (req, res) => {
     res.status(404).send("something went wrong");
   }
 });
+
 connectDB()
   .then(() => {
     console.log("database connected successfully!! ");
