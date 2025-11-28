@@ -4,25 +4,49 @@ const { validateSignUpData } = require("./utils/validation");
 const app = express();
 const User = require("./models/user");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
+const { userAuth } = require("./middlewares/auth");
 app.use(express.json());
+app.use(cookieParser);
 
 app.post("/login", async (req, res) => {
   try {
     const { emailId, password } = req.body;
     const user = User.findOne({ emailId });
     if (!user) {
-      throw new Error("Email not Available in DB");
+      throw new Error("Invalid Credentials");
     }
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await user.validatePassword(password);
     if (isPasswordValid) {
+      //create a jwt token
+      const token = user.getJWT(); //(hide data , secret key )
+      //add the token to the cookie
+      res.cookie("token", token, {
+        expires: new Date(Date.now() + 8 * 3600000),
+      });
       res.send("Login Successful!");
     } else {
-      throw new Error("password is not valid");
+      throw new Error("Invalid Credentials");
     }
   } catch (err) {
     res.status(400).send("Error :" + err.message);
   }
 });
+
+app.get("/profile", userAuth, async (req, res) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      throw new Error("user does not exist ! ");
+    }
+    res.send(user);
+    res.send("reading cookies");
+  } catch (err) {
+    res.status(400).send("Error : " + err.message);
+  }
+});
+
 app.post("/signup", async (req, res) => {
   try {
     //validate the user
@@ -113,6 +137,11 @@ app.patch("/user/:userId", async (req, res) => {
   }
 });
 
+app.post("/connectionRequest", async (req, res) => {
+  const user = req.user;
+  console.log("sending you a request ");
+  res.send(user.firstName + "sent the connection request ");
+});
 connectDB()
   .then(() => {
     console.log("database connected successfully!! ");
