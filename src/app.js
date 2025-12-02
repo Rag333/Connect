@@ -19,6 +19,7 @@ app.post("/connectionRequest", async (req, res) => {
   console.log("sending you a request ");
   res.send(user.firstName + "sent the connection request ");
 });
+
 connectDB()
   .then(() => {
     console.log("database connected successfully!! ");
