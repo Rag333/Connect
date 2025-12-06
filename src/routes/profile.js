@@ -34,4 +34,14 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
   }
 });
 
+profileRouter.patch("/profile/password", async (req, res) => {
+  const { emailId, password } = req.body;
+  const user = User.findOne({ emailId });
+  if (!user) {
+    throw new Error("User not found !");
+  }
+  if (user.password === password) {
+  }
+});
+
 module.exports = profileRouter;
