@@ -3,15 +3,20 @@ const profileRouter = express.Router();
 const { userAuth } = require("../middlewares/auth");
 const User = require("../models/user");
 const { validateEditProfileData } = require("../utils/validation");
+
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
     const user = req.user;
     if (!user) {
-      throw new Error("user does not exist ! ");
+      return res.status(401).json({ message: "Unauthorized" });
     }
-    res.send(user);
+    return res.status(200).json({
+      data: user,
+    });
   } catch (err) {
-    res.status(400).send("Error : " + err.message);
+    return res.status(500).json({
+      message: "Server Error",
+    });
   }
 });
 

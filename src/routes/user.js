@@ -57,7 +57,7 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
     const loggedInUser = req.user;
     // find all the connection requests (received + sent );
 
-    const page = parseInt(req.query.pages) || 1; // it will come in string fromat so we have to change it for integer
+    const page = parseInt(req.query.page) || 1; // it will come in string fromat so we have to change it for integer
     let limit = parseInt(req.query.limit) || 10;
     limit = limit > 50 ? 50 : limit;
     const skip = (page - 1) * limit;
@@ -68,11 +68,10 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
     // .populate("toUserId", "firstName lastName");
 
     const hideUserFromFeed = new Set();
-    connectionRequests.forEach;
-    (req) => {
+    connectionRequests.forEach((req) => {
       hideUserFromFeed.add(req.fromUserId.toString());
       hideUserFromFeed.add(req.toUserId.toString());
-    };
+    });
 
     const users = await User.find({
       $and: [
@@ -84,7 +83,9 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
       .skip(skip)
       .limit(limit);
 
-    res.send(users);
+    res.json({
+      data: users,
+    });
   } catch (err) {
     res.status(400).send("ERROR : " + err.message);
   }

@@ -43,10 +43,9 @@ const userSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
-      validate(value) {
-        if (!["male", "female", "others"].includes(value)) {
-          throw new Error("Gender is not valid" + value);
-        }
+      enum: {
+        values: ["male", "female", "other"],
+        message: "Gender is not valid",
       },
     },
     photoUrl: {
@@ -57,7 +56,7 @@ const userSchema = new mongoose.Schema(
         }
       },
       default:
-        "https://i.pinimg.com/736x/9e/c9/19/9ec919468e1ed8af1002b551f5950a94.jpg",
+        "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
     },
     about: {
       type: String,
