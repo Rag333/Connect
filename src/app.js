@@ -18,12 +18,6 @@ app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
 
-app.post("/connectionRequest", async (req, res) => {
-  const user = req.user;
-  console.log("sending you a request ");
-  res.send(user.firstName + "sent the connection request ");
-});
-
 connectDB()
   .then(() => {
     console.log("database connected successfully!! ");
