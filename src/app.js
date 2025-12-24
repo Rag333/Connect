@@ -4,6 +4,7 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
+require("dotenv").config();
 app.set("trust proxy", 1);
 app.use(
   cors({
@@ -31,7 +32,7 @@ app.use("/", userRouter);
 connectDB()
   .then(() => {
     console.log("database connected successfully!! ");
-    app.listen(3000, () => {
+    app.listen(process.env.PORT || 3000, () => {
       console.log("listening at port no 3000");
     });
   })

@@ -9,7 +9,7 @@ const userAuth = async (req, res, next) => {
       return res.status(401).send("Unauthorized Access Denied !!!");
     }
     //validate cookies
-    const decodedObj = await jwt.verify(token, "Lionenmess@123");
+    const decodedObj = await jwt.verify(token, process.env.JWT_SECRET);
     //find the user name
     const { _id } = decodedObj;
     const user = await User.findById(_id);
