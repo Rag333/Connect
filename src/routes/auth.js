@@ -31,7 +31,7 @@ authRouter.post("/signup", async (req, res) => {
       expires: new Date(Date.now() + 8 * 3600000),
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     });
 
     res.json({
@@ -59,7 +59,7 @@ authRouter.post("/login", async (req, res) => {
         expires: new Date(Date.now() + 8 * 3600000),
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       });
       res.json({
         message: "Login Successful !",
@@ -78,7 +78,7 @@ authRouter.post("/logout", async (req, res) => {
     expires: new Date(0),
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   });
   res.send("Logout Successfully !");
 });
