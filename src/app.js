@@ -17,6 +17,12 @@ app.use(
     credentials: true,
   })
 );
+app.post(
+  "/payment/webhook",
+  express.raw({ type: "application/json" }),
+  require("./routes/payment")
+);
+
 app.use(express.json());
 app.use(cookieParser());
 

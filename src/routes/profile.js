@@ -31,15 +31,15 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
     );
     await loggedInUser.save();
     res.json({
-      message: `${loggedInUser.firsName} , your profile updated Successfully`,
+      message: `${loggedInUser.firstName} , your profile updated Successfully`,
       data: loggedInUser,
     });
   } catch (err) {
-    res.status(404).send("ERROR : " + err.message);
+    res.status(400).json({ message: err.message });
   }
 });
 
-profileRouter.patch("/profile/password", async (req, res) => {
+profileRouter.patch("/profile/password", userAuth, async (req, res) => {
   const { emailId, password } = req.body;
   const user = User.findOne({ emailId });
   if (!user) {

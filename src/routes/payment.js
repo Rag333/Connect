@@ -47,7 +47,7 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
       amount: order.amount,
       currency: order.currency,
       notes: order.notes,
-      keyId: process.env.YOUR_KEY_ID,
+      keyId: process.env.RAZORPAY_KEY_ID,
     });
   } catch (err) {
     res.status(400).json({
