@@ -33,6 +33,25 @@ const initializeSocket = (server) => {
           console.log(firstName + " " + text);
 
           // TODO: Check if userId & targetUserId are friends
+          const connection = ConnectionRequest.findOne({
+            $or: [
+              {
+                fromUserId: userId,
+                toUserId: targetUserId,
+                status: "accepted",
+              },
+              {
+                fromUserId: targetUserId,
+                toUserId: userId,
+                status: "accepted",
+              },
+            ],
+          });
+          if (!connection) {
+            return res
+              .status(404)
+              .send("Only friends can send message to each other !");
+          }
 
           let chat = await Chat.findOne({
             participants: { $all: [userId, targetUserId] },
